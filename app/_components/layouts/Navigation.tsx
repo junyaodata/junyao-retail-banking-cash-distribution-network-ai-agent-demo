@@ -3,13 +3,16 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { Github, Menu, X } from "lucide-react"
 
 /** One entry in the top bar. */
 interface NavItem {
   label: string
   href: string
 }
+
+const GITHUB_URL =
+  "https://github.com/junyaodata/junyao-retail-banking-cash-distribution-network-ai-agent-demo"
 
 /**
  * The bar is the same on every page, and its two entries are the app's two
@@ -94,6 +97,15 @@ export default function Navigation({
                 </Link>
               )
             })}
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source on GitHub"
+              className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
+              <Github size={20} />
+            </a>
           </div>
 
           {/* Mobile Navigation Button */}
@@ -146,6 +158,16 @@ export default function Navigation({
                   </Link>
                 )
               })}
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 font-medium text-base py-3 px-4 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Github size={18} />
+                GitHub
+              </a>
             </div>
           </div>
         )}
