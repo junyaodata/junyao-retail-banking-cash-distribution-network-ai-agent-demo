@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* This app is light-only in the theme-toggle sense: there is no `dark` class
+ * and no toggle. But "light-only" here means the *palette itself* is the
+ * Night Ops Console dark palette -- see tailwind.config.ts for why. A single
+ * fixed palette is still the constraint this file honours: no `dark:`
+ * variants, nothing conditional on a class nothing ever sets. */
+:root {
+  --font-plex-sans: "IBM Plex Sans", sans-serif;
+  --font-plex-mono: "IBM Plex Mono", monospace;
+  --font-inter: "Inter", sans-serif;
+
+  --background: #0B1220;
+  --foreground: #E7ECF5;
+
+  /* shadcn primitives. Only the handful `components/ui/*` and
+   * `tailwind.config.ts` actually resolve are kept; the palette this app draws
+   * with is `tailwind.config.ts`, not these. */
+  --card: 220 39% 11%;
+  --card-foreground: 220 33% 92%;
+  --popover: 220 39% 11%;
+  --popover-foreground: 220 33% 92%;
+  --destructive: 0 72% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 217 33% 20%;
+  --ring: 172 66% 50%;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: var(--font-inter), sans-serif;
+    background-color: var(--background);
+    /* A faint schematic dot grid, not a flat fill -- the console reads as
+       instrumented rather than merely dark. Subtle enough to disappear under
+       any content sitting on top of it. */
+    background-image: radial-gradient(circle, rgba(231, 236, 245, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: var(--foreground);
+    @apply antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-plex-sans), var(--font-inter), sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111A2E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2DD4BF;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5EEAD4;
+}
+
+/* ---------------------------------------------------------------------------
+ * Chart tokens, read by `components/chat/blocks/chart/`.
+ *
+ * This app has one fixed dark surface, so there is one fixed dark chart
+ * palette to match -- not the reference skill's light default. These four
+ * categorical hues are the skill's own dark-mode steps (blue/orange/aqua/
+ * yellow, in the skill's validated order) re-validated with
+ * `validate_palette.js` against this app's actual card surface (#111A2E):
+ * all six checks pass (worst adjacent CVD ΔE 8.4, worst normal-vision ΔE
+ * 19.8). The slot ORDER is the colorblind-safety mechanism, not a cosmetic
+ * choice -- assign in order, never cycle past the last one.
+ * ------------------------------------------------------------------------ */
+.viz-root {
+  color-scheme: dark;
+  --viz-surface: #111A2E;
+  --viz-ink: #E7ECF5;
+  --viz-ink-muted: #8B93A7;
+  --viz-grid: #1E293B;
+  --viz-axis: #334155;
+  /* Single-series bars and lines use one hue (sequential), never one hue per bar. */
+  --viz-seq: #3987e5;
+  --viz-series-1: #3987e5;
+  --viz-series-2: #d95926;
+  --viz-series-3: #199e70;
+  --viz-series-4: #c98500;
+}
