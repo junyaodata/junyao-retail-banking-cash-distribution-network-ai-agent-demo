@@ -1,0 +1,221 @@
+# data/site.toml
+#
+# Every sentence this app says, grouped by the surface it appears on.
+#
+# The contract is one way: every key named in `REQUIRED_SITE_KEYS`
+# (lib/site/schema.ts) must exist here, extra keys are allowed and only the
+# component that knows about them reads them.
+#
+# TOML trap: once an array of tables starts, every bare key after it belongs to
+# the last element of that array. So each section's plain fields come first.
+
+
+# === Brand =================================================================
+[brand]
+displayName = "CashFlow Sentinel"
+
+logoPrefix = "CashFlow"
+logoAccent = "Sentinel"
+
+footerName = "CashFlowSentinel"
+
+
+# === <head> ================================================================
+[seo]
+locale = "en_US"
+title = "CashFlow Sentinel: AI-Powered Cash Distribution Network Analytics Agent"
+description = "An AI agent for retail-bank cash distribution and branch operations analytics. Query ATM outage tickets, uncover the gap between reported and true SLA attainment, diagnose replenishment blind spots, and understand fleet capacity economics through natural conversation."
+keywords = [
+    "Retail Banking",
+    "Cash Distribution Network",
+    "ATM Analytics",
+    "SLA Attainment",
+    "AI Agent",
+    "Branch Operations",
+    "Cash Management",
+    "Distribution Operations",
+]
+
+
+# === The four business threads. Exactly four ==============================
+#
+# One config, rendered twice: the capability cards on the home page and the
+# insight cards on the agent welcome screen.
+#
+#   title    the concept name. Precise to an insider, opaque to everyone else
+#   subtitle one plain sentence. This is what a stranger reads first
+#   tooltip  two or three sentences: define the term, then say what moves it
+#
+# No jargon inside a tooltip. Explaining one insider word with another is the
+# mistake this field exists to prevent.
+#
+# This used to be two arrays, `home.capabilities` and `chat.insights`, naming
+# the same four things in two vocabularies. They had already drifted: the
+# second thread was "Portfolio Concentration" on one screen and "Portfolio
+# Health" on the other, with a different icon and no tooltip.
+
+[[capabilities]]
+icon = "AlertTriangle"
+title = "Incident-Level SLA"
+subtitle = "Whether the reported cash-out recovery time matches what branch managers actually see"
+tooltip = "The bank reports that dead ATMs get fixed within their service agreement about 95% of the time. But a nightly cleanup job on the ticketing system closes and reopens tickets for machines that are still empty, so one multi-day outage can look like three short ones that each hit their deadline. Merging tickets for the same machine that reopen quickly shows the real recovery time is far longer."
+
+[[capabilities]]
+icon = "LineChart"
+title = "Peak-Day Blind Spot"
+subtitle = "How far short the cash-loading plan falls on paydays and the 1st and 15th of the month"
+tooltip = "The amount of cash loaded into a machine is based on its average withdrawals over the past month, a number that has no idea a payday is coming. On paydays and the first and middle of the month, machines run out at nearly five times the ordinary rate, because the plan behind them was never built for that day."
+
+[[capabilities]]
+icon = "DollarSign"
+title = "Fleet Capacity Economics"
+subtitle = "Which machines are undersized for their location, and whether visiting them more often pays for itself"
+tooltip = "Some machines have cash compartments too small for how much gets withdrawn from them, so the loading plan gives up and puts in what fits rather than what is needed. Visiting an undersized machine more often only helps if the extra trips cost less than the outage hours they prevent, and for most of these machines they do not."
+
+[[capabilities]]
+icon = "Users"
+title = "Staffing and Outage Correlation"
+subtitle = "Whether a thin-staffed branch also takes longer to get a dead machine fixed"
+tooltip = "A branch with a chronic staffing shortage is not more likely to have a dead ATM, but it is slower to get one fixed, because a manager has to sign off on an emergency cash delivery before it can go out. Where staffing is thin, that signature takes longer, and outages that could have been same-day stretch overnight."
+
+
+# === Home page =============================================================
+[home]
+tagline = "Cash Distribution Network Analytics Agent"
+
+description = "An AI agent that helps branch operations teams analyze a retail bank's ATM cash distribution network through natural conversation. Query outage tickets, uncover replenishment blind spots, and surface actionable insights from your cash network data."
+
+blurb = "Analyzing an ATM cash distribution network: 20 tables, ~1,755,000 records covering outage tickets, replenishment plans, cash balances, and branch staffing"
+
+techStack = ["Strands SDK", "AWS Bedrock", "PostgreSQL", "Next.js"]
+
+[home.headline]
+prefix = "CashFlow "
+accent = "Sentinel"
+
+[home.cta]
+title = "Start Analyzing"
+subtitle = "Ask questions about your cash distribution network in plain English"
+
+# Labels for the overlay that renders business-context.md.
+[home.businessContext]
+triggerLabel = "What problem does this solve?"
+title = "The business behind the agent"
+subtitle = "A community bank can hit every number in its armored-carrier contract and still have branch managers describing machines that are empty every week, because the reported number and the real one are not measuring the same thing. This is where that gap comes from, and what this agent does about it."
+
+
+# === Agent page ============================================================
+[chat]
+agent = "Sentinel"
+welcomeSubtitle = "Ask questions about the ATM cash distribution network in plain English."
+tryExamples = "Try: \"What's our true SLA attainment by carrier?\" or \"Which ATMs have the most real outage hours?\""
+
+suggestionsHint = "Ask me directly or click a suggestion"
+inputPlaceholder = "Enter your question..."
+
+[chat.messages]
+# A whole sentence: the banner prints it as-is. It used to be a fragment that
+# a component wrapped in "I'm here to help you with ...", and the two halves
+# drifted into printing the frame twice.
+welcomeMessage = "I'm here to help you with cash distribution network analytics."
+waitForResponse = "Wait for the current answer to finish first."
+
+
+# === kickstart questions: exactly 12 ======================================
+#
+# Every one is a rewrite of a line in the Analysis Index of system-prompt.md.
+# Nothing here may ask for an analysis the prompt does not teach.
+#
+# Render quota, exactly 3 of each:
+#
+#   table      "as a Markdown table" and "show the SQL"
+#   flowchart  "as a flowchart"
+#   chart      "as a bar chart" or "as a line chart"
+#   free       none of those phrases may appear
+#
+# The render field draws the icon on the button, the phrase is what actually
+# makes the block appear. `mise run cli-check-content` verifies both directions.
+
+# === free 1 / 3 ===
+[[chat.suggestedActions]]
+render = "free"
+title = "Introduction"
+label = "What can you do?"
+action = "What can you help me analyze? Give me a short tour of the ATM cash distribution network and the kinds of questions you answer well."
+
+# === chart 1 / 3 (bar, two series: a gap) ===
+[[chat.suggestedActions]]
+render = "chart"
+title = "Reported vs. True SLA"
+label = "Is our reported SLA number real?"
+action = "For each carrier, give me the reported ticket-level SLA attainment and the true incident-level attainment after merging same-machine tickets that reopen within 24 hours. Show it as a bar chart with one series for each, then say in one line which carrier's reported score depends most on ticket splitting."
+
+# === flowchart 1 / 3 (status funnel) ===
+[[chat.suggestedActions]]
+render = "flowchart"
+title = "Ticket Lifecycle"
+label = "What happens to a cash-out ticket?"
+action = "Walk me through the stages a cash-out ticket passes through from being opened to being closed, and how many tickets took each path. Put the count on each stage. Show it as a flowchart."
+
+# === table 1 / 3 (ranked list) ===
+[[chat.suggestedActions]]
+render = "table"
+title = "Worst 20 ATMs"
+label = "Which machines are costing us the most?"
+action = "List the 20 ATMs with the highest true outage hours over the two-year window, after merging same-machine tickets that reopen within 24 hours into one outage. Give me the machine code, model, and true outage hours. Show it as a Markdown table, and show the SQL you ran."
+
+# === free 2 / 3 ===
+[[chat.suggestedActions]]
+render = "free"
+title = "Ticket Splitting"
+label = "Why does the number look too good?"
+action = "Our reported cash-out SLA attainment is in the mid-90s, but branch managers say their machines are out constantly. Walk me through the evidence that the reported number is inflated by how the ticketing platform closes tickets overnight, and tell me how much the true attainment differs."
+
+# === chart 2 / 3 (bar, two series: a gap) ===
+[[chat.suggestedActions]]
+render = "chart"
+title = "Peak-Day Coverage Gap"
+label = "Does the plan know about paydays?"
+action = "Compare the replenishment plan's implied daily withdrawal allowance against the actual average withdrawal, for peak cash days and for ordinary days. Show it as a bar chart with one series for each, then say in one line how badly peak days are underfunded."
+
+# === flowchart 2 / 3 (funnel) ===
+[[chat.suggestedActions]]
+render = "flowchart"
+title = "Capacity Capping"
+label = "How many machines are undersized?"
+action = "Trace how many ATMs currently have a capacity-capped replenishment plan out of the whole fleet, and how concentrated that problem is among the 20 machines with the most true outage hours. Put the count at each stage. Show it as a flowchart."
+
+# === table 2 / 3 (staffing list) ===
+[[chat.suggestedActions]]
+render = "table"
+title = "Understaffed on Paydays"
+label = "Which branches scheduled enough people but they didn't show?"
+action = "List the 15 branches with the lowest teller coverage ratio on peak cash days. Give me the branch code, density class, operations strain score, and the coverage ratio. Show it as a Markdown table, and show the SQL you ran."
+
+# === free 3 / 3 ===
+[[chat.suggestedActions]]
+render = "free"
+title = "Does Frequency Help?"
+label = "Should we just visit problem machines more often?"
+action = "If I just compare outage hours across all machines by replenishment frequency, machines visited more often look worse, not better. Explain why that comparison is misleading, and tell me what raising frequency from two to three visits a week actually does to outage hours once you control for machine model and location demand."
+
+# === chart 3 / 3 (bar, ranking) ===
+[[chat.suggestedActions]]
+render = "chart"
+title = "Capacity Cap by Model"
+label = "Which machine model is the worst offender?"
+action = "Rank the five ATM models by what share of their current replenishment plans are capacity-capped. Show it as a bar chart, then say in one line which model is the worst offender and why."
+
+# === flowchart 3 / 3 (funnel) ===
+[[chat.suggestedActions]]
+render = "flowchart"
+title = "Staffing Funnel"
+label = "Do fully scheduled peak shifts still fall short?"
+action = "Trace how many 2025 peak-cash-day shifts were scheduled with enough tellers, and of those, how many still ended up with a coverage ratio below 90 percent once you look at who actually showed up. Put the count at each stage. Show it as a flowchart."
+
+# === table 3 / 3 (rollup) ===
+[[chat.suggestedActions]]
+render = "table"
+title = "Regional SLA Ranking"
+label = "Which region is really doing worst?"
+action = "Give me the true SLA attainment for 2025, after merging same-machine tickets that reopen within 24 hours into one outage, one row per region, ranked worst first. Show it as a Markdown table, and show the SQL you ran."
