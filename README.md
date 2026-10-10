@@ -1,4 +1,4 @@
-# AI Agent App
+# CashFlow Sentinel — Retail Banking Analytics Agent
 
 [![Live Demo](https://img.shields.io/badge/demo-live-2ea44f?logo=vercel&logoColor=white)](https://junyao-retail-banking-cash-distribu.vercel.app/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org)
@@ -7,7 +7,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?logo=postgresql&logoColor=white)](https://neon.tech)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com)
 
-**An AI agent that reads a real multi-table database, writes its own SQL against it, and answers business questions in plain English — with a table, a chart, or a diagram, whichever actually fits the question.**
+**An AI agent that queries a multi-table PostgreSQL database and explains retail-bank cash operations through tables, charts, and diagrams.**
 
 **🔗 Live demo:** [junyao-retail-banking-cash-distribu.vercel.app](https://junyao-retail-banking-cash-distribu.vercel.app/)
 
@@ -56,3 +56,33 @@ mise run dev                 # Next.js on :3000, FastAPI on :8000
 ```
 
 Open `localhost:3000` and start asking questions.
+
+## Portfolio scenario and analysis evidence
+
+The supplied project design brief describes **Greybirch Bank & Trust, a fictional regional bank**. Its reference scope covers ATM outages, cash replenishment, carrier service, and branch staffing in 2024–2025. Treat the business setting and reference findings as teaching material; measured live results must be reproduced before being presented as project findings.
+
+Start with the [quarterly ticket-SLA SQL baseline](sql/01_ticket_sla_by_quarter.sql), then follow the [analysis definitions and validation checklist](docs/analysis-validation.md). The checklist explains why ticket-level attainment can differ from incident-level recovery and how to preserve evidence for a result.
+
+The reference SQL documents use SQLite; this application uses PostgreSQL. Query migration and live-data validation are tracked separately. No production SLA result is claimed by the baseline addition.
+
+[Project progress and learning checkpoints](docs/progress.md) record completed work, AI assistance, limitations, and the next analysis task.
+
+## Verification commands
+
+After installing dependencies with `mise run inst`:
+
+```bash
+mise run cli-check-content   # content/prompt consistency; seed checks may be skipped
+mise run test-python         # Python tests
+mise run test-node           # Node tests
+mise run build-web           # frontend build and TypeScript checks
+```
+
+Database checks require the project's existing secret configuration and provisioned schema:
+
+```bash
+mise run cli-test-db-conn
+mise run cli-print-db-schema
+```
+
+A connection check only proves a database round trip. It does not validate the analytical results. Keep credentials in local/deployment configuration; never commit them.
